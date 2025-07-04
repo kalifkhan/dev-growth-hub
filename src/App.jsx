@@ -1,9 +1,10 @@
 import './App.css';
+import MarkDown from './component/MarkDown';
 
 function App() {
   return (
     <div className="App">
-      <div> HELLO </div>
+      <MarkDown />
     </div>
   );
 }
