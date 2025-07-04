@@ -1,12 +1,11 @@
-import './App.css';
-import MarkDown from './component/MarkDown';
+import "./App.css";
+import DragDrop from "./component/DragDrop";
+import MarkDown from "./component/MarkDown";
 
 function App() {
   return (
     <div className="App">
-      {/* <MarkDown /> */}
-      <div>HEllo </div>
-      <MarkDown />
+      <DragDrop />
     </div>
   );
 }
