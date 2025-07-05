@@ -1,26 +1,45 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 const ITEMS = ["item1", "item2", "item3", "item4"];
 const DragDrop = () => {
-  const [dropItem, setDropItem] = React.useState(null);
-  const handleDragStart = (e,index) => {
+  const [dropItem, setDropItem] = useState(ITEMS);
+  const [startDragItem, setStartDragitem] = useState(null);
+
+  const handleDragStart = (index) => {
     console.log("Item dragged:", index);
-    e.dataTransfer.setData("text/plain", index);
+    setStartDragitem(index);
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const rec = e.dataTransfer.getData("text/plain");
-    console.log(rec);
-    setDropItem((prev)=>[...prev, rec])
-  };
+  const handleOnDrop = useCallback((dropIndex) => {
+    console.log(dropIndex);
+    const nextItemToaddIndex = startDragItem;
+    console.log(dropIndex, nextItemToaddIndex);
+    // setDropItem((prev) => {
+    //   return;
+    // });
+    setDropItem((prev) => {
+      const updated = [...prev];
+      
+      const draggedItem = updated.splice(startDragItem, 1)[0];
+      updated.splice(dropIndex, 0, draggedItem)
+
+      return updated;
+    });
+  },[startDragItem]);
 
   return (
     <div>
-      <div style={{ width: "400px", background: "lightBlue", padding: "10px" }}>
+      <div
+        style={{
+          width: "400px",
+          background: "lightBlue",
+          padding: "10px",
+          margin: "10px",
+        }}
+      >
         DragDrop
-        {ITEMS
-          ? ITEMS?.map((item) => (
+        {dropItem
+          ? dropItem?.map((item, index) => (
               <div
                 key={item}
                 style={{
@@ -32,24 +51,19 @@ const DragDrop = () => {
                 }}
                 draggable
                 onDragStart={(e) => {
-                  handleDragStart(e,item);
+                  handleDragStart(index);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                }}
+                onDrop={() => {
+                  handleOnDrop(index);
                 }}
               >
                 {item}{" "}
               </div>
             ))
           : null}
-      </div>
-      <div
-        style={{ width: "200px", background: "red", height: "200px" }}
-        draggable
-        onDrop={(e) => handleDrop(e)}
-        onDragOver={(e) => {
-          e.preventDefault();
-        }}
-      >
-        drop here
-        <div></div>
       </div>
     </div>
   );
